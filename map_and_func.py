@@ -203,8 +203,6 @@ class map_state:
                     self.squres_return_to_map(self.i_top+1, y)
                 self.i_top = self.i_top-1
 
-        # self.print_map()
-# ####################
     def move_to_Right(self, x, y):
         self . i_right = y+1
         while ((self.i_right < self.dim) and (self.i_right > 0) and ((self.mymap[x][self.i_right]["name_color"] == "white") or (self.mymap[x][self.i_right]["state"] == True))):
@@ -217,7 +215,6 @@ class map_state:
                 if ((self.mymap[x][self.i_right]["shape"] == "⚪️") and (self.mymap[x][self.i_right]["name_color"] == "white")):
                     self. add_square_white_to_map_not_goal_append(
                         x, self.i_right, self.mymap[x][self.i_right-1]["name_color"], self.square_white_goal[self.mymap[x][self.i_right-1]["shape"]])
-
                     self.change_tow_squres_in_map_and_white(
                         x, x, self.i_right, self.i_right-1)
                     if (self.is_empty_map_not_goal_append(x, (self.i_right)-1) != -1):
@@ -246,8 +243,6 @@ class map_state:
                 if (self.is_empty_map_not_goal_append(x, self.i_right-1) != -1):
                     self.squres_return_to_map(x, self.i_right-1)
                 self.i_right = self.i_right+1
-
-        # self.print_map()
 
     def move_to_Left(self, x, y):
         self . i_left = y-1
@@ -293,8 +288,6 @@ class map_state:
                 if (self.is_empty_map_not_goal_append(x, self.i_left+1) != -1):
                     self.squres_return_to_map(x, self.i_left+1)
                 self.i_left = self.i_left-1
-
-        # self.print_map()
 
     def move_state(axis, state):
         next_state = copy.deepcopy(state)
