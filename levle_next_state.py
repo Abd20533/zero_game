@@ -5,8 +5,8 @@ m = map_state(7)
 
 m.printer(2, 3, "red", "🔴", True, False)
 m.printer(3, 4, "blue", "🔵", True, False)
-m.printer(4, 4, "red", "🟥", False, False)
-m.printer(2, 4, "blue", "🟦", False, False)
+m.printer(4, 5, "red", "🟥", False, False)
+m.printer(2, 5, "blue", "🟦", False, False)
 # map_state.play(m)
 
 s = map_state.all_next_state_move(m)

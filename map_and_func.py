@@ -6,6 +6,7 @@ import copy
 
 
 class map_state:
+    parent = "root"
     dim = 0
     map_not_goal = []
     # ❤️🔲
@@ -14,6 +15,9 @@ class map_state:
     def printer(self, x, y, name_color, shape, state, covered):
         self.mymap[x][y] = CC.Const_cell(
             x, y, name_color, shape, state, covered).square_zero_info
+
+    def rename_parent(self, name):
+        self.parent = name
 
     def __init__(self, dim):
         self.dim = dim
@@ -63,7 +67,7 @@ class map_state:
 
     def change_tow_squres_in_map_and_white(self, xn, xo, yn, yo):
         self.mymap[xn][yn]["name_color"] = self.mymap[xo][yo]["name_color"]
-        self.mymap[xn][yn]["covered"] == False
+        self.mymap[xn][yn]["covered"] = True
         self.mymap[xn][yn]["state"] = False
         self.mymap[xn][yn]["shape"] = self.mymap[xo][yo]["shape"]
         self.mymap[xo][yo]["name_color"] = "white"
@@ -105,14 +109,26 @@ class map_state:
     def state_square(self, x, y):
         return self.mymap[x][y]["state"]
 
+    def covered_square(self, x, y):
+        return self.mymap[x][y]["covered"]
+
     def true_move(self, x, y, i):
-        if (self.inside_map(i) and (self.color_square(x, y) == "white") or (self.state_square(x, y) == True)):
+        if (self.inside_map(i) and ((self.color_square(x, y) == "white") or (self.state_square(x, y) == True))):
             return True
         else:
             return False
 
     def condition_equle_goal_with_square(self, x1, x2, y1, y2):
         if ((self.color_square(x1, y1) == self.color_square(x2, y2)) and (self.state_square(x1, y1) != self.state_square(x2, y2))):
+            return True
+        else:
+            return False
+
+    def covered_to_true_or_false(self, x, y, T):
+        self.mymap[x][y]["covered"] = T
+
+    def condition_for_moving_the_previous_box(self, x, y, i):
+        if (self.covered_square(x, y) == True and self.inside_map(i) and self.color_square(x, y) != "white" and self.state_square(x, y) == False):
             return True
         else:
             return False
@@ -125,11 +141,15 @@ class map_state:
                     self.print_square_white(self.i-1, y)
                     if (self.is_empty_map_not_goal_append(self . i-1, y) != -1):
                         self.squres_return_to_map(self . i-1, y)
+                    if (self.condition_for_moving_the_previous_box(self.i-2, y, self.i-2)):
+                        self.move_to_down(self.i-2, y)
                     break
                 if (self.condition_equle_goal_with_square(self.i-1, self.i, y, y)):
                     self.delet_and_to_white(self.i, y, self.i-1, y)
                     if (self.is_empty_map_not_goal_append(self.i-1, y) != -1):
                         self.squres_return_to_map(self.i-1, y)
+                    if (self.condition_for_moving_the_previous_box(self.i-2, y, self.i-2)):
+                        self.move_to_down(self.i-2, y)
                     self.i = self.i+1
 
                     break
@@ -140,7 +160,8 @@ class map_state:
                         self . i, (self.i)-1, y, y)
                     if (self.is_empty_map_not_goal_append(self . i-1, y) != -1):
                         self.squres_return_to_map(self . i-1, y)
-
+                    if (self.condition_for_moving_the_previous_box(self.i-2, y, self.i-2)):
+                        self.move_to_down(self.i-2, y)
                     self.i = self.i+1
                 else:
                     self. add_to_map_not_goal_append(self.i, y)
@@ -150,41 +171,48 @@ class map_state:
                     if (self.is_empty_map_not_goal_append((self.i)-1, y) != -1):
                         self.squres_return_to_map((self.i)-1, y)
                     self.i = self.i+1
-            if (((self.shape_square(self.i, y) == "⬜️"))):
+            if ((self.shape_square(self.i, y) == "⬜️")):
                 self.change_tow_squres_in_map_and_white(
                     self.i, self.i-1, y, y)
                 if (self.is_empty_map_not_goal_append(self.i-1, y) != -1):
                     self.squres_return_to_map(self.i-1, y)
+                if (self.condition_for_moving_the_previous_box(self.i-2, y, self.i-2)):
+                    self.move_to_down(self.i-2, y)
                 self.i = self.i+1
-        # self.print_map()
+        if (self.mymap[self.i][y]["name_color"] == "black"):
+            self.covered_to_true_or_false(self . i - 1, y, False)
 
     def move_to_Top(self, x, y):
         self . i_top = x-1
-        while ((self.i_top < self.dim) and (self.i_top != 0) and (self.mymap[self.i_top][y]["name_color"] == "white") or (self.mymap[self.i_top][y]["state"] == True)):
-            if (self.mymap[self.i_top][y]["state"] == True):
-                if ((self.mymap[self.i_top][y]["shape"] == "⚫️") and (self.mymap[self.i_top][y]["name_color"] == "black")):
+        while (self.true_move(self.i_top, y, self.i_top)):
+            if (self.state_square(self.i_top, y) == True):
+                if ((self.shape_square(self.i_top, y) == "⚫️") and (self.color_square(self.i_top, y) == "black")):
                     self.print_square_white(self.i_top+1, y)
                     if (self.is_empty_map_not_goal_append(self . i_top+1, y) != -1):
                         self.squres_return_to_map(self . i_top+1, y)
+
+                    if (self.condition_for_moving_the_previous_box(self.i_top+2, y, self.i_top+2)):
+                        self.move_to_Top(self.i_top+2, y)
                     break
-                if ((self.mymap[self.i_top][y]["shape"] == "⚪️") and (self.mymap[self.i_top][y]["name_color"] == "white")):
-                    # self.print_map()
+                if ((self.shape_square(self.i_top, y) == "⚪️") and (self.color_square(self.i_top, y) == "white")):
                     self. add_square_white_to_map_not_goal_append(
                         self.i_top, y, self.mymap[self.i_top+1][y]["name_color"], self.square_white_goal[self.mymap[self.i_top+1][y]["shape"]])
                     self.change_tow_squres_in_map_and_white(
                         self . i_top, self . i_top+1, y, y)
                     if (self.is_empty_map_not_goal_append(self . i_top+1, y) != -1):
                         self.squres_return_to_map(self . i_top+1, y)
-                        # self.print_map()
-                    # print("!"*19)
-                    # self.print_map()
+
+                    if (self.condition_for_moving_the_previous_box(self.i_top+2, y, self.i_top+2)):
+                        self.move_to_Top(self.i_top+2, y)
 
                     self.i_top = self.i_top-1
-
-                elif ((self.mymap[self.i_top+1][y]["name_color"] == self.mymap[self.i_top][y]["name_color"]) and (self.mymap[self.i_top][y]["state"] != self.mymap[self.i_top+1][y]["state"])):
+                elif (self.condition_equle_goal_with_square(self.i_top+1, self.i_top, y, y)):
                     self.delet_and_to_white(self.i_top, y, self.i_top+1, y)
                     if (self.is_empty_map_not_goal_append(self.i_top+1, y) != -1):
                         self.squres_return_to_map(self.i_top+1, y)
+
+                    if (self.condition_for_moving_the_previous_box(self.i_top+2, y, self.i_top+2)):
+                        self.move_to_Top(self.i_top+2, y)
                     self.i_top = self.i_top-1
                     break
                 else:
@@ -194,37 +222,49 @@ class map_state:
 
                     if (self.is_empty_map_not_goal_append((self.i_top)+1, y) != -1):
                         self.squres_return_to_map((self.i_top)+1, y)
+                    if (self.condition_for_moving_the_previous_box(self.i_top+2, y, self.i_top+2)):
+                        self.move_to_Top(self.i_top+2, y)
                     self.i_top = self.i_top-1
-
-            if ((self.mymap[self.i_top][y]["shape"] == "⬜️") and (self.mymap[self.i_top][y]["state"] != True)):
+            if ((self.shape_square(self.i_top, y) == "⬜️") and (self.state_square(self.i_top, y) != True)):
                 self.change_tow_squres_in_map_and_white(
                     self.i_top, self.i_top+1, y, y)
                 if (self.is_empty_map_not_goal_append(self.i_top+1, y) != -1):
                     self.squres_return_to_map(self.i_top+1, y)
+
+                if (self.condition_for_moving_the_previous_box(self.i_top+2, y, self.i_top+2)):
+                    self.move_to_Top(self.i_top+2, y)
                 self.i_top = self.i_top-1
+        if (self.mymap[self.i_top][y]["name_color"] == "black"):
+            self.covered_to_true_or_false(self . i_top + 1, y, False)
 
     def move_to_Right(self, x, y):
         self . i_right = y+1
-        while ((self.i_right < self.dim) and (self.i_right > 0) and ((self.mymap[x][self.i_right]["name_color"] == "white") or (self.mymap[x][self.i_right]["state"] == True))):
-            if (self.mymap[x][self.i_right]["state"] == True):
-                if ((self.mymap[x][self.i_right]["shape"] == "⚫️") and (self.mymap[x][self.i_right]["name_color"] == "black")):
+        while (self.true_move(x, self.i_right, self.i_right)):
+            if (self.state_square(x, self.i_right) == True):
+                if ((self.shape_square(x, self.i_right) == "⚫️") and (self.color_square(x, self.i_right) == "black")):
                     self.print_square_white(x, self.i_right-1)
                     if (self.is_empty_map_not_goal_append(x, self.i_right-1) != -1):
                         self.squres_return_to_map(x, self.i_right-1)
+                    if (self.condition_for_moving_the_previous_box(x, self.i_right-2, self.i_right-2)):
+                        self.move_to_Right(x, self.i_right-2)
                     break
-                if ((self.mymap[x][self.i_right]["shape"] == "⚪️") and (self.mymap[x][self.i_right]["name_color"] == "white")):
+                if ((self.shape_square(x, self.i_right) == "⚪️") and (self.color_square(x, self.i_right) == "white")):
                     self. add_square_white_to_map_not_goal_append(
                         x, self.i_right, self.mymap[x][self.i_right-1]["name_color"], self.square_white_goal[self.mymap[x][self.i_right-1]["shape"]])
                     self.change_tow_squres_in_map_and_white(
                         x, x, self.i_right, self.i_right-1)
+
                     if (self.is_empty_map_not_goal_append(x, (self.i_right)-1) != -1):
                         self.squres_return_to_map(x, self.i_right-1)
+                    if (self.condition_for_moving_the_previous_box(x, self.i_right-2, self.i_right-2)):
+                        self.move_to_Right(x, self.i_right-2)
                     self.i_right = self.i_right+1
-
-                elif ((self.mymap[x][self.i_right-1]["name_color"] == self.mymap[x][self.i_right]["name_color"]) and (self.mymap[x][self.i_right]["state"] != self.mymap[x][self.i_right-1]["state"])):
+                elif (self.condition_equle_goal_with_square(x, x, self.i_right-1, self.i_right)):
                     self.delet_and_to_white(x, self.i_right, x, self.i_right-1)
                     if (self.is_empty_map_not_goal_append(x, self.i_right-1) != -1):
                         self.squres_return_to_map(x, self.i_right-1)
+                    if (self.condition_for_moving_the_previous_box(x, self.i_right-2, self.i_right-2)):
+                        self.move_to_Right(x, self.i_right-2)
                     self.i_right = self.i_right+1
                     break
 
@@ -235,40 +275,56 @@ class map_state:
 
                     if (self.is_empty_map_not_goal_append(x, (self.i_right)-1) != -1):
                         self.squres_return_to_map(x, self.i_right-1)
+                    if (self.condition_for_moving_the_previous_box(x, self.i_right-2, self.i_right-2)):
+                        self.move_to_Right(x, self.i_right-2)
                     self.i_right = self.i_right+1
-
-            if (((self.mymap[x][self.i_right]["shape"] == "⬜️"))):
+            if (((self.shape_square(x, self.i_right) == "⬜️"))):
                 self.change_tow_squres_in_map_and_white(
                     x, x, self.i_right, self.i_right-1)
                 if (self.is_empty_map_not_goal_append(x, self.i_right-1) != -1):
                     self.squres_return_to_map(x, self.i_right-1)
+                if (self.condition_for_moving_the_previous_box(x, self.i_right-2, self.i_right-2)):
+                    self.move_to_Right(x, self.i_right-2)
                 self.i_right = self.i_right+1
+
+        if (self.mymap[x][self . i_right]["name_color"] == "black"):
+            self.covered_to_true_or_false(x, self . i_right - 1, False)
 
     def move_to_Left(self, x, y):
         self . i_left = y-1
-        while ((self.i_left < self.dim) and (self.i_left > 0) and (self.mymap[x][self.i_left]["name_color"] == "white") or (self.mymap[x][self.i_left]["state"] == True)):
-            if (self.mymap[x][self.i_left]["state"] == True):
-                if ((self.mymap[x][self.i_left]["shape"] == "⚫️") and (self.mymap[x][self.i_left]["name_color"] == "black")):
+        self.true_move(x, self.i_left, self.i_left)
+        while (self.true_move(x, self.i_left, self.i_left)):
+            if (self. state_square(x, self.i_left) == True):
+                if ((self.shape_square(x, self.i_left) == "⚫️") and (self.color_square(x, self.i_left) == "black")):
                     self.print_square_white(x, self.i_left+1)
+
                     if (self.is_empty_map_not_goal_append(x, self.i_left+1) != -1):
                         self.squres_return_to_map(x, self.i_left+1)
-                    break
 
-                if ((self.mymap[x][self.i_left]["shape"] == "⚪️") and (self.mymap[x][self.i_left]["name_color"] == "white")):
+                    if (self.condition_for_moving_the_previous_box(x, self.i_left+2, self.i_left+2)):
+                        self.move_to_Left(x, self.i_left+2)
+
+                    break
+                if ((self.shape_square(x, self.i_left) == "⚪️") and (self. color_square(x, self.i_left) == "white")):
                     self. add_square_white_to_map_not_goal_append(
                         x, self.i_left, self.mymap[x][self.i_left+1]["name_color"], self.square_white_goal[self.mymap[x][self.i_left+1]["shape"]])
                     self.change_tow_squres_in_map_and_white(
                         x, x, self.i_left, self.i_left+1)
+
                     if (self.is_empty_map_not_goal_append(x, (self.i_left)+1) != -1):
                         self.squres_return_to_map(x, self.i_left+1)
 
+                    if (self.condition_for_moving_the_previous_box(x, self.i_left+2, self.i_left+2)):
+                        self.move_to_Left(x, self.i_left+2)
                     self.i_left = self.i_left-1
 
-                elif ((self.mymap[x][self.i_left+1]["name_color"] == self.mymap[x][self.i_left]["name_color"]) and (self.mymap[x][self.i_left]["state"] != self.mymap[x][self.i_left+1]["state"])):
+                elif (self.condition_equle_goal_with_square(x, x, self.i_left, self.i_left+1)):
                     self.delet_and_to_white(x, self.i_left, x, self.i_left+1)
 
                     if (self.is_empty_map_not_goal_append(x, self.i_left+1) != -1):
                         self.squres_return_to_map(x, self.i_left+1)
+                    if (self.condition_for_moving_the_previous_box(x, self.i_left+2, self.i_left+2)):
+                        self.move_to_Left(x, self.i_left+2)
                     self.i_left = self.i_left-1
 
                     break
@@ -277,40 +333,52 @@ class map_state:
                     self. add_to_map_not_goal_append(x, self.i_left)
                     self.change_tow_squres_in_map_and_white(
                         x, x, self.i_left, self.i_left+1)
+                    if (self.condition_for_moving_the_previous_box(x, self.i_left+2, self.i_left+2)):
+                        self.move_to_Left(x, self.i_left+2)
 
                     if (self.is_empty_map_not_goal_append(x, (self.i_left)+1) != -1):
                         self.squres_return_to_map(x, self.i_left+1)
                     self.i_left = self.i_left-1
-
-            if (((self.mymap[x][self.i_left]["shape"] == "⬜️"))):
+            if ((self.shape_square(x, self.i_left) == "⬜️") and (self.state_square(x, self.i_left) == False)):
                 self.change_tow_squres_in_map_and_white(
                     x, x, self.i_left, self.i_left+1)
                 if (self.is_empty_map_not_goal_append(x, self.i_left+1) != -1):
                     self.squres_return_to_map(x, self.i_left+1)
+                if (self.condition_for_moving_the_previous_box(x, self.i_left+2, self.i_left+2)):
+                    self.move_to_Left(x, self.i_left+2)
                 self.i_left = self.i_left-1
+        if (self.mymap[x][self . i_left]["name_color"] == "black"):
+            self.covered_to_true_or_false(x, self . i_left + 1, False)
 
     def move_state(axis, state):
         next_state = copy.deepcopy(state)
 
         if (axis == "w"):
+            next_state. rename_parent("w")
             next_state .Top = next_state.all_cell_moveable()
+            next_state .Top.reverse()
             for i in next_state.Top:
                 next_state.move_to_Top(i[0], i[1])
 
         if (axis == "s"):
+            next_state. rename_parent("s")
+
             next_state .down = next_state.all_cell_moveable()
-            next_state .down.reverse()
             for i in next_state.down:
 
                 next_state.move_to_down(i[0], i[1])
 
         if (axis == "a"):
+            next_state. rename_parent("a")
+
             next_state .left = next_state.all_cell_moveable()
             next_state .left.reverse()
             for i in next_state.left:
                 next_state.move_to_Left(i[0], i[1])
 
         if (axis == "d"):
+            next_state. rename_parent("d")
+
             next_state .down = next_state.all_cell_moveable()
             for i in next_state.down:
                 next_state.move_to_Right(i[0], i[1])
@@ -381,8 +449,11 @@ class map_state:
 
         state.print_map()
         print("#"*50)
-        if (state.all_cell_moveable() == [] and state.all_cell_gaol() == []):
+        if (state.you_win()):
             print("congratulations you win ")
+        elif (state.you_loser()):
+            print("congratulations you loser hhhhhhh")
+
         else:
             print(state.all_cell_moveable())
             print("please enter q to stop game:")
@@ -395,6 +466,25 @@ class map_state:
             if (move_location != "q"):
                 next = map_state.move_state(move_location, state)
                 map_state.play(next)
+
+    def you_win(self):
+        if (self.all_cell_gaol() == [] and self.all_cell_moveable() == []):
+            return True
+
+        else:
+            return False
+
+    def you_loser(self):
+        if (self.all_cell_gaol() != [] and self.all_cell_moveable() == []):
+            return True
+        elif (self.all_cell_gaol() == [] and self.all_cell_moveable() != []):
+            if (self.map_not_goal == []):
+                return True
+            if (len(self.map_not_goal) != 0):
+                return False
+
+        else:
+            return False
 
     def all_cell_moveable(self):
         self.moveable = []
@@ -426,27 +516,3 @@ class my_equals:
                     return False
 
         return True
-
-
-# m = map_state(8)
-# m.printer(2, 2, "black", "⬛️", False, False)
-# m.printer(2, 2, "black", "⬛️", False, False)
-# m.printer(2, 1, "black", "⬛️", False, False)
-# m.printer(3, 2, "black", "⬛️", False, False)
-# m.printer(4, 2, "black", "⬛️", False, False)
-
-# m.printer(5, 3, "red", "🔴", True, False)
-# m.printer(5, 6, "blue", "🔵", True, False)
-# m.printer(6, 3, "white", "⚪️", True, False)
-
-# m.printer(4, 5, "red", "🟥", False, False)
-# m.printer(6, 1, "red", "🟥", False, False)
-
-# m.printer(2, 4, "blue", "🟦", False, False)
-# m.move("s")
-# m.move("a")
-# m.move("d")
-# m.move("a")
-
-
-# map_state.play(m)
