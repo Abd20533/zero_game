@@ -7,6 +7,7 @@ import copy
 
 class map_state:
     parent = "root"
+    parent1 = None
     dim = 0
     map_not_goal = []
     # ❤️🔲
@@ -18,6 +19,12 @@ class map_state:
 
     def rename_parent(self, name):
         self.parent = name
+
+    def get_hash(self):
+        return hash(tuple(
+            tuple((cell["name_color"], cell["shape"]) for cell in row)
+            for row in self.mymap
+        ))
 
     def __init__(self, dim):
         self.dim = dim
