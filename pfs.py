@@ -26,7 +26,6 @@ def bfs(start_state):
                 path.append(current_state.parent)
 
                 current_state = current_state.parent1
-                # print(path)
             path.reverse()
             win_path.reverse()
             return win_path, path
@@ -45,14 +44,14 @@ def bfs(start_state):
 initial_state = maf. map_state(8)
 # initial_state.parent = "root"
 # initial_state.printer(6, 5, "blue", "🔵", True, False)
-# initial_state.printer(4, 1, "blue", "🔵", True, False)
+initial_state.printer(4, 1, "blue", "🔵", True, False)
 
-# initial_state.printer(6, 1, "white", "⚪️", True, False)
+initial_state.printer(6, 1, "white", "⚪️", True, False)
 # initial_state.printer(5, 3, "black", "⬛️", False, False)
 
-# initial_state.printer(5, 1, "blue", "🟦", False, False)
+initial_state.printer(5, 1, "blue", "🟦", False, False)
 
-initial_state.printer(1, 1, "red", "🔴", True, False)
+# initial_state.printer(1, 1, "red", "🔴", True, False)
 initial_state.printer(5, 5, "red", "🟥", False, False)
 # initial_state.printer(4, 5, "blue", "🟦", False, False)
 initial_state.print_map()
