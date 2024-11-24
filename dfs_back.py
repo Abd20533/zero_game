@@ -37,6 +37,7 @@ def dfs(state, visited=None, max_depth=100, path=None):
 
                 found, path, len_visited = dfs(next_state, visited,
                                                (max_depth - 1), path)
+
             if found:
 
                 return found, path, len_visited
@@ -72,12 +73,6 @@ initial_state.printer(4, 4, "black", "⬛️", False, False)
 initial_state.printer(4, 6, "black", "⬛️", False, False)
 initial_state.printer(4, 5, "black", "⬛️", False, False)
 
-# initial_state.printer(4, 9, "red", "🔴", True, False)
-# initial_state.printer(1, 2, "red", "🟥", False, False)
-# initial_state.printer(2, 7, "blue", "🔵", True, False)
-# initial_state.printer(6, 2, "blue", "🟦", False, False)
-# initial_state.printer(4, 2, "red", "🟥", False, False)
-# initial_state.printer(1, 4, "red", "🔴", True, False)
 
 initial_state.printer(4, 9, "red", "🔴", True, False)
 

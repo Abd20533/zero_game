@@ -7,6 +7,7 @@ import queue as queue
 
 
 def pfs(state, q):
+
     visited = set()
     queue = q
     queue.put(state)
@@ -26,9 +27,7 @@ def pfs(state, q):
 
         for next_state in current_state.all_next_state_move():
             if (next_state not in visited):
-                # print("-"*40)
-                # next_state.print_map()
-                # current_state.print_map()
+
                 if (maf.my_equals.equals(next_state, current_state) == False):
                     print("-"*40)
                     if (next_state.you_win()):
