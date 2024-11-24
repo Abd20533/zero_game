@@ -20,11 +20,13 @@ class map_state:
 
     def rename_parent(self, name):
         self.parent = name
-    
 
+    def __lt__(self, other):
+        return self.cost < other.cost
 
     def recost_parent(self, cost):
         self.cost = cost
+
     def get_hash(self):
         return hash(tuple(
             tuple((cell["name_color"], cell["shape"]) for cell in row)

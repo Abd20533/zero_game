@@ -3,6 +3,7 @@ from collections import deque
 import queue as qu
 import map_and_func as maf
 import dfs as d
+import heapq
 
 
 def bfs(start_state):
@@ -81,15 +82,42 @@ def dfs(start_state):
     return None, [], []
 
 
-def ucs(start_state):
+def UCS(initial_state):
+    priority_queue = []
+    heapq.heappush(priority_queue, (initial_state.cost,
+                   initial_state))  # (cost, state)
+    visited = set()
 
+    while priority_queue:
+        _, current = heapq.heappop(priority_queue)
+        visited.add(current.get_hash())
 
+        if current.you_win():
 
+            win_path = []
+            path = []
+            while current:
+                win_path.append(current)
+                path.append(current.parent)
 
+                current = current.parent1
+            path.reverse()
+            win_path.reverse()
+            len_visited = len(visited)
+            return win_path
+           # win_path = []
+           # while current is not None:
+           #     win_path.append(current)
+           #     current = current.parent
+           # return win_path
+        # [::-1]
 
+        for move in current.all_next_state_move():
+            if move.get_hash() not in visited:
+                move.parent = current
+                heapq.heappush(priority_queue, (move.cost, move))
 
-
-
+    return None
 
 
 initial_state = maf. map_state(11)
