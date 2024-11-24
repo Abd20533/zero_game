@@ -7,6 +7,7 @@ import copy
 
 class map_state:
     parent = "root"
+    cost = 0
     parent1 = None
     dim = 0
     map_not_goal = []
@@ -19,7 +20,11 @@ class map_state:
 
     def rename_parent(self, name):
         self.parent = name
+    
 
+
+    def recost_parent(self, cost):
+        self.cost = cost
     def get_hash(self):
         return hash(tuple(
             tuple((cell["name_color"], cell["shape"]) for cell in row)

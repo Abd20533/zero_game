@@ -81,6 +81,17 @@ def dfs(start_state):
     return None, [], []
 
 
+def ucs(start_state):
+
+
+
+
+
+
+
+
+
+
 initial_state = maf. map_state(11)
 initial_state.parent = "root"
 initial_state.printer(1, 1, "black", "⬛️", False, False)
