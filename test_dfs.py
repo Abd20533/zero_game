@@ -1,6 +1,6 @@
 
-from map_and_func import map_state
-import map_and_func as maf
+from state import map_state
+import state as maf
 import numpy as np
 import queue as queue
 

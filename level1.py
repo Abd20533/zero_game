@@ -1,5 +1,5 @@
 # import map_and_func as maf
-from map_and_func import map_state
+from state import map_state
 
 m = map_state(10)
 m.printer(2, 2, "black", "⬛️", False, False)

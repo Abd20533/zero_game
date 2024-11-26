@@ -1,7 +1,7 @@
 
 from collections import deque
 import queue as qu
-import map_and_func as maf
+import state as maf
 import dfs as d
 import heapq
 import numpy as np

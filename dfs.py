@@ -1,5 +1,5 @@
 import queue as qe
-import map_and_func as maf
+import state as maf
 from collections import deque
 
 import numpy as np
