@@ -22,6 +22,7 @@ class map_state:
         self.parent = name
 
     def __lt__(self, other):
+        # print("__lt__")
         return self.cost < other.cost
 
     def recost_parent(self, cost):
@@ -32,6 +33,12 @@ class map_state:
             tuple((cell["name_color"], cell["shape"]) for cell in row)
             for row in self.mymap
         ))
+
+    def get_hash1(self):
+        return hash((tuple(
+            (tuple((cell["name_color"], cell["shape"]) for cell in row)
+             for row in self.mymap)
+        )))
 
     def __init__(self, dim):
         self.dim = dim
@@ -369,6 +376,8 @@ class map_state:
 
         if (axis == "w"):
             next_state. rename_parent("w")
+            next_state. recost_parent(state.cost+1)
+
             next_state .Top = next_state.all_cell_moveable()
             next_state .Top.reverse()
             for i in next_state.Top:
@@ -376,6 +385,7 @@ class map_state:
 
         if (axis == "s"):
             next_state. rename_parent("s")
+            next_state. recost_parent(state.cost+1)
 
             next_state .down = next_state.all_cell_moveable()
             for i in next_state.down:
@@ -384,6 +394,7 @@ class map_state:
 
         if (axis == "a"):
             next_state. rename_parent("a")
+            next_state. recost_parent(state.cost+1)
 
             next_state .left = next_state.all_cell_moveable()
             next_state .left.reverse()
@@ -392,6 +403,7 @@ class map_state:
 
         if (axis == "d"):
             next_state. rename_parent("d")
+            next_state. recost_parent(state.cost+1)
 
             next_state .down = next_state.all_cell_moveable()
             for i in next_state.down:
