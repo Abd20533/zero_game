@@ -1,6 +1,6 @@
 import heapq
 import map_and_func as maf
-import numpy as np
+# import numpy as np
 
 
 def UCS(initial_state):
@@ -8,15 +8,16 @@ def UCS(initial_state):
     heapq.heappush(priority_queue, (initial_state.cost,
                    initial_state)
                    )  # (cost, state)
-    visited = np.array([])
+    # visited = np.array([])
+    visited = set()
     print(priority_queue[0])
     while priority_queue:
         print(len(visited))
 
         _, current = heapq.heappop(priority_queue)
 
-        visited = np.append(visited, current.get_hash1())
-
+        # visited = np.append(visited, current.get_hash1())
+        visited.add(current.get_hash())
         if current.you_win():
             cost = current.cost
             win_path = []
@@ -33,7 +34,7 @@ def UCS(initial_state):
             return win_path, path, len_visited, cost
 
         for move in current.all_next_state_move():
-            if move.get_hash1() not in visited:
+            if move.get_hash() not in visited:
                 move.parent1 = current
                 heapq.heappush(priority_queue, (move.cost, move))
 
@@ -101,7 +102,7 @@ initial_state.printer(4, 5, "black", "⬛️", False, False)
 # initial_state.printer(4, 2, "red", "🟥", False, False)
 # initial_state.printer(1, 4, "red", "🔴", True, False)
 
-initial_state.printer(4, 1, "red", "🔴", True, False)
+initial_state.printer(4, 9, "red", "🔴", True, False)
 
 initial_state.printer(1, 2, "red", "🟥", False, False)
 initial_state.printer(2, 7, "blue", "🔵", True, False)
