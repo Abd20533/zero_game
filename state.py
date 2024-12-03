@@ -7,6 +7,7 @@ import copy
 
 class map_state:
     parent = "root"
+    size = 0
     cost = 0
     parent1 = None
     dim = 0
@@ -529,6 +530,48 @@ class map_state:
                     self.gaol.append((i, j))
 
         return self.gaol
+
+    def heuristic_old(state):
+        cost = 0
+
+        for i in range(state.dim):
+            for j in range(state.dim):
+                cell = state.mymap[i][j]
+
+                if "state" in cell and cell["state"] == True:
+                    goal_color = cell["name_color"]
+
+                    for x in range(state.dim):
+                        for y in range(state.dim):
+                            piece = state.mymap[x][y]
+                            if "name_color" in piece and piece["name_color"] == goal_color:
+
+                                cost += abs(i - x) + abs(j - y)
+                                break
+        return cost
+
+    def heuristic(state):
+        cost = 0
+        items = state.all_cell_gaol()
+        for item in items:
+
+            for x in range(state.dim):
+                for y in range(state.dim):
+                    piece = state.mymap
+                    if "name_color" in piece[x][y] and piece[x][y]["name_color"] == state.mymap[item[0]][item[1]]["name_color"]:
+                        cost += abs(item[0] - x) + abs(item[1] - y)
+                        break
+        return cost
+
+    def equals(state1, state2):
+        for i in range(len(state1.mymap)):
+            for j in range(len(state1.mymap)):
+                if (state1.mymap[i][j] == state2.mymap[i][j]):
+                    continue
+                else:
+                    return False
+
+        return True
 
 
 class my_equals:
