@@ -1,53 +1,38 @@
-
 from collections import deque
 import state as sta
-import numpy as np
 import time as ti
 
 
 def bfs(start_state):
     queue = deque([start_state])
-    visited = {}
-    visited_new = np.array([])
+    visited = set()
 
-    print(start_state.you_loser_new())
-    if (start_state.you_loser_new()):
-
+    if start_state.you_loser_new():
         return None, [], []
 
     while queue:
-        # if (len(visited_new) % 100 == 0):
-        print("len(visited_new) is :", len(visited_new))
+        if (len(visited) % 100 == 0):
+            print(" visited is len :", len(visited))
+
         current_state = queue.popleft()
         current_hash = current_state.get_hash()
-        v = False
-        if current_state.you_win():
 
+        if current_state.you_win():
             win_path = []
             path = []
             while current_state:
                 win_path.append(current_state)
                 path.append(current_state.parent)
-
                 current_state = current_state.parent1
             path.reverse()
             win_path.reverse()
-            len_visited = len(visited_new)
-            return win_path, path, len_visited
+            return win_path, path, len(visited)
 
-        if current_hash in visited_new:
-            v = True
-
-        if (v == False):
-            visited_new = np.append(visited_new, current_hash)
-
-        possible_states = current_state.all_next_state_move()
-
-        for next_state in possible_states:
-
-            if ((current_state.equals(next_state) == False) and ((next_state.you_loser() == False) or (next_state. you_loser_new() == False))):
-                next_hash = next_state.get_hash()
-                if next_hash not in visited_new:
+        if current_hash not in visited:
+            visited.add(current_hash)
+            possible_states = current_state.all_next_state_move()
+            for next_state in possible_states:
+                if not sta.my_equals.equals(next_state, current_state) or not next_state.you_loser_new():
                     next_state.parent1 = current_state
                     queue.append(next_state)
 
@@ -78,7 +63,7 @@ initial_state.printer(2, 3, "green", "🟩", False, False)
 initial_state.printer(3, 2, "yelow", "🟨", False, False)
 
 
-initial_state.printer(4, 5, "white", "⚪️", True, False)
+initial_state.printer(4, 5, "red", "⚪️", True, False)
 initial_state.printer(1, 7, "yelow", "🟡", True, False)
 initial_state.printer(4, 8, "blue", "🔵", True, False)
 initial_state.printer(1, 11, "orange", "🟠", True, False)
@@ -105,18 +90,3 @@ print(" len path :", len(path1))
 print(path1)
 for item in state1:
     item.print_map()
-# initial_state = sta. map_state(5, 7)
-
-# initial_state.printer(3, 1, "orange", "🟧", False, False)
-# initial_state.printer(2, 2, "blue", "🟦", False, False)
-# initial_state.printer(2, 3, "red", "🟥", False, False)
-# # # initial_state.printer(2, 1, "green", "🟩", False, False)
-# # initial_state.printer(1, 1, "yelow", "🟨", False, False)
-
-# initial_state.printer(3, 4, "white", "⚪️", True, False)
-# # initial_state.printer(1, 4, "yelow", "🟡", True, False)
-# initial_state.printer(2, 4, "blue", "🔵", True, False)
-# initial_state.printer(1, 3, "orange", "🟠", True, False)
-
-# initial_state.printer(1, 1, "green", "🟢", True, False)
-# initial_state.printer(5, 8, "black", "⚫️", True, False)

@@ -7,7 +7,6 @@ import heapq
 import numpy as np
 
 
-
 def bfs(start_state):
     queue = deque([start_state])
     visited = {}
@@ -46,7 +45,7 @@ def bfs(start_state):
     return None, []
 
 
-def dfs(start_state):
+def dfs1(start_state):
     queue = deque([start_state])
     visited = {}
 
@@ -82,7 +81,6 @@ def dfs(start_state):
                 queue.append(next_state)
 
     return None, [], []
-
 
 
 def dfs(state, visited=None, max_depth=100, path=None):
@@ -159,6 +157,7 @@ def UCS(initial_state):
 
     return None, None, None
 
+
 def UCStest(initial_state):
     priority_queue = []
     heapq.heappush(priority_queue, (initial_state.cost,
@@ -197,7 +196,7 @@ def UCStest(initial_state):
     return None
 
 
-initial_state = maf. map_state(11)
+initial_state = maf. map_state(11, 11)
 initial_state.parent = "root"
 initial_state.printer(1, 1, "black", "⬛️", False, False)
 initial_state.printer(1, 6, "black", "⬛️", False, False)

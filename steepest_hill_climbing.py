@@ -43,7 +43,7 @@ initial_state.printer(1, 1, "red", "🟥", False, False)
 # initial_state.printer(3, 1, "red", "🟥", False, False)
 # initial_state.printer(1, 8, "red", "🔴", True, False)
 # initial_state.printer(8, 8, "red", "🟥", False, False)
-initial_state.print_map()
+initial_state.print_map() 
 # path, len(path), len(visited_array)
 # path, path_win, path_len, visited_len
 path, path_len, visited_len = steepest_hill_climbing(initial_state)

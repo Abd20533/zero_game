@@ -11,11 +11,23 @@ class map_state:
     cost = 0
     parent1 = None
     dim = 0
+    dim1 = 0
     map_not_goal = []
     # ❤️🔲
-    square_white_goal = {"🟦": "🔵", "🟥": "🔴"}
+    square_white_goal = {"🟦": "🔵", "🟥": "🔴", "🟨": "🟡", "🟧": "🟠", "🟩": "🟢"}
+    map_goal_covered = []
+
+    def add_to_map_not_goal(self, x, y, name_color, shape,):
+
+        self.map_not_goal.append(
+            [x, y, name_color, shape, True, False])
+
+    def row_printer_black(self, row, first, end):
+        for i in range(first, end):
+            self.printer(row, i, "black", "⬛️", False, False)
 
     def printer(self, x, y, name_color, shape, state, covered):
+
         self.mymap[x][y] = CC.Const_cell(
             x, y, name_color, shape, state, covered).square_zero_info
 
@@ -41,19 +53,24 @@ class map_state:
              for row in self.mymap)
         )))
 
-    def __init__(self, dim):
+    def __init__(self, dim, dim1=0):
         self.dim = dim
-        self.mymap = np.full((dim, dim), fill_value="⬜️", dtype=object)
+        if (dim1 == 0):
+            self.dim1 = dim
+        if (dim1 != 0):
+            self.dim1 = dim1
+
+        self.mymap = np.full((dim, dim1), fill_value="⬜️", dtype=object)
         for i in range(0, dim):
-            for j in range(0, dim):
+            for j in range(0, dim1):
                 self.mymap[i][j] = CC.Const_cell(
                     i, j, "white", "⬜️", False, False).square_zero_info
         self. black_wall()
 
     def black_wall(self):
 
-        for y in range(self.dim):
-            for x in range(self.dim):
+        for x in range(self.dim):
+            for y in range(self.dim1):
 
                 if (x == 0):
                     self.mymap[x][y] = CC.Const_cell(
@@ -64,7 +81,7 @@ class map_state:
                 if (y == 0):
                     self.mymap[x][y] = CC.Const_cell(
                         x, y, "black", "⬛️", False, False).square_zero_info
-                if (y == self.dim-1):
+                if (y == self.dim1-1):
                     self.mymap[x][y] = CC.Const_cell(
                         x, y, "black", "⬛️", False, False).square_zero_info
 
@@ -116,8 +133,14 @@ class map_state:
             self.mymap[x][y]["covered"] = self.map_not_goal[self.ind][5]
             self.map_not_goal.pop(self.ind)
 
-    def inside_map(self, i):
+    def inside_map_row(self, i):
         if (i < self.dim and i > 0):
+            return True
+        else:
+            return False
+
+    def inside_map_coluom(self, i):
+        if (i < self.dim1 and i > 0):
             return True
         else:
             return False
@@ -135,7 +158,13 @@ class map_state:
         return self.mymap[x][y]["covered"]
 
     def true_move(self, x, y, i):
-        if (self.inside_map(i) and ((self.color_square(x, y) == "white") or (self.state_square(x, y) == True))):
+        if (self.inside_map_row(i) and ((self.color_square(x, y) == "white") or (self.state_square(x, y) == True))):
+            return True
+        else:
+            return False
+
+    def true_move_coluom(self, x, y, i):
+        if (self.inside_map_coluom(i) and ((self.color_square(x, y) == "white") or (self.state_square(x, y) == True))):
             return True
         else:
             return False
@@ -150,10 +179,15 @@ class map_state:
         self.mymap[x][y]["covered"] = T
 
     def condition_for_moving_the_previous_box(self, x, y, i):
-        if (self.covered_square(x, y) == True and self.inside_map(i) and self.color_square(x, y) != "white" and self.state_square(x, y) == False):
+        if (self.covered_square(x, y) == True and self.inside_map_row(i) and self.color_square(x, y) != "white" and self.state_square(x, y) == False):
             return True
         else:
             return False
+
+    def all_cell_in_row_to_false(self, x, y):
+        if self.mymap[x][y+1]["name_color"] != "black" and self.mymap[x][y+1]["name_color"] != "white":
+            if (self.mymap[x][y+2]["name_color"] == "black"):
+                self.mymap[x][y]["covered"] = False
 
     def move_to_down(self, x, y):
         self . i = x+1
@@ -261,7 +295,7 @@ class map_state:
 
     def move_to_Right(self, x, y):
         self . i_right = y+1
-        while (self.true_move(x, self.i_right, self.i_right)):
+        while (self.true_move_coluom(x, self.i_right, self.i_right)):
             if (self.state_square(x, self.i_right) == True):
                 if ((self.shape_square(x, self.i_right) == "⚫️") and (self.color_square(x, self.i_right) == "black")):
                     self.print_square_white(x, self.i_right-1)
@@ -308,14 +342,18 @@ class map_state:
                 if (self.condition_for_moving_the_previous_box(x, self.i_right-2, self.i_right-2)):
                     self.move_to_Right(x, self.i_right-2)
                 self.i_right = self.i_right+1
+        if (self . i_right < self.dim1):
+            if (self.mymap[x][self . i_right]["name_color"] == "black"):
+                self.covered_to_true_or_false(x, self . i_right - 1, False)
 
-        if (self.mymap[x][self . i_right]["name_color"] == "black"):
-            self.covered_to_true_or_false(x, self . i_right - 1, False)
+        # if (self.i_right < self.dim1 and self.i_right+1 < self.dim1):
+        #     if (self.mymap[x][self . i_right+1]["name_color"] == "black"):
+        #         self.covered_to_true_or_false(x, self . i_right-1, False)
 
     def move_to_Left(self, x, y):
         self . i_left = y-1
-        self.true_move(x, self.i_left, self.i_left)
-        while (self.true_move(x, self.i_left, self.i_left)):
+        self.true_move_coluom(x, self.i_left, self.i_left)
+        while (self.true_move_coluom(x, self.i_left, self.i_left)):
             if (self. state_square(x, self.i_left) == True):
                 if ((self.shape_square(x, self.i_left) == "⚫️") and (self.color_square(x, self.i_left) == "black")):
                     self.print_square_white(x, self.i_left+1)
@@ -372,6 +410,14 @@ class map_state:
         if (self.mymap[x][self . i_left]["name_color"] == "black"):
             self.covered_to_true_or_false(x, self . i_left + 1, False)
 
+        if (self . i_left > 0 and self . i_left-1 > 0):
+
+            if (self.mymap[x][self . i_left-1]["name_color"] == "black"):
+                self.covered_to_true_or_false(x, self . i_left + 1, False)
+
+        # if (self.all_cell_moveable_in_Row(x, self . i_left, 10)-self . i_left == 0):
+        #     self.covered_to_true_or_false(x, self . i_left + 1, False)
+
     def move_state(axis, state):
         next_state = copy.deepcopy(state)
 
@@ -383,6 +429,7 @@ class map_state:
             next_state .Top.reverse()
             for i in next_state.Top:
                 next_state.move_to_Top(i[0], i[1])
+            next_state.all_cell_False()
 
         if (axis == "s"):
             next_state. rename_parent("s")
@@ -392,6 +439,7 @@ class map_state:
             for i in next_state.down:
 
                 next_state.move_to_down(i[0], i[1])
+            next_state.all_cell_False()
 
         if (axis == "a"):
             next_state. rename_parent("a")
@@ -401,7 +449,7 @@ class map_state:
             next_state .left.reverse()
             for i in next_state.left:
                 next_state.move_to_Left(i[0], i[1])
-
+            next_state.all_cell_False()
         if (axis == "d"):
             next_state. rename_parent("d")
             next_state. recost_parent(state.cost+1)
@@ -409,6 +457,7 @@ class map_state:
             next_state .down = next_state.all_cell_moveable()
             for i in next_state.down:
                 next_state.move_to_Right(i[0], i[1])
+            next_state.all_cell_False()
 
         return next_state
 
@@ -438,6 +487,7 @@ class map_state:
             for i in self.Top:
                 self.move_to_Top(i[0], i[1])
             self.print_map()
+            self.all_cell_False()
 
         if (axis == "s"):
             self .down = self.all_cell_moveable()
@@ -445,6 +495,7 @@ class map_state:
             for i in self.down:
 
                 self.move_to_down(i[0], i[1])
+            self.all_cell_False()
             self.print_map()
 
         if (axis == "a"):
@@ -453,11 +504,14 @@ class map_state:
             for i in self.left:
                 self.move_to_Left(i[0], i[1])
             self.print_map()
+            self.all_cell_False()
 
         if (axis == "d"):
             self .down = self.all_cell_moveable()
             for i in self.down:
                 self.move_to_Right(i[0], i[1])
+            self.all_cell_False()
+
             self.print_map()
 
         return self.mymap
@@ -501,9 +555,18 @@ class map_state:
         else:
             return False
 
+    def you_loser_new(self):
+        if (len(self.all_cell_gaol()) > len(self.all_cell_moveable())):
+            return True
+
+        elif (len(self.all_cell_gaol()) < len(self.all_cell_moveable())):
+            return True
+        return False
+
     def you_loser(self):
         if (self.all_cell_gaol() != [] and self.all_cell_moveable() == []):
             return True
+
         elif (self.all_cell_gaol() == [] and self.all_cell_moveable() != []):
             if (self.map_not_goal == []):
                 return True
@@ -516,16 +579,35 @@ class map_state:
     def all_cell_moveable(self):
         self.moveable = []
         for i in range(0, self.dim):
-            for j in range(0, self.dim):
+            for j in range(0, self.dim1):
                 if ((self.mymap[i][j]["name_color"] != "white") and (self.mymap[i][j]["name_color"] != "black") and (self.mymap[i][j]["state"] == False)):
                     self.moveable.append((i, j))
 
         return self.moveable
 
+    def all_cell_False(self):
+        for i in range(0, self.dim):
+            for j in range(0, self.dim1):
+                self.mymap[i][j]["covered"] = False
+
+    def all_cell_moveable_in_Row(self, row, coloum, i=0):
+        self.moveable_row = []
+
+        if i == 0:
+            for j in range(coloum, self.dim1):
+                if ((self.mymap[row][j]["name_color"] != "white") and (self.mymap[row][j]["name_color"] != "black") and (self.mymap[row][j]["state"] == False)):
+                    self.moveable_row.append((row, j))
+            if i != 0:
+                for j in range(0, coloum):
+                    if ((self.mymap[row][j]["name_color"] != "white") and (self.mymap[row][j]["name_color"] != "black") and (self.mymap[row][j]["state"] == False)):
+                        self.moveable_row.append((row, j))
+
+        return len(self.moveable_row)
+
     def all_cell_gaol(self):
         self.gaol = []
         for i in range(0, self.dim):
-            for j in range(0, self.dim):
+            for j in range(0, self.dim1):
                 if ((self.mymap[i][j]["name_color"] != "black" and self.mymap[i][j]["state"] == True)):
                     self.gaol.append((i, j))
 
@@ -535,14 +617,14 @@ class map_state:
         cost = 0
 
         for i in range(state.dim):
-            for j in range(state.dim):
+            for j in range(state.dim1):
                 cell = state.mymap[i][j]
 
                 if "state" in cell and cell["state"] == True:
                     goal_color = cell["name_color"]
 
                     for x in range(state.dim):
-                        for y in range(state.dim):
+                        for y in range(state.dim1):
                             piece = state.mymap[x][y]
                             if "name_color" in piece and piece["name_color"] == goal_color:
 
@@ -556,7 +638,7 @@ class map_state:
         for item in items:
 
             for x in range(state.dim):
-                for y in range(state.dim):
+                for y in range(state.dim1):
                     piece = state.mymap
                     if "name_color" in piece[x][y] and piece[x][y]["name_color"] == state.mymap[item[0]][item[1]]["name_color"]:
                         cost += abs(item[0] - x) + abs(item[1] - y)
@@ -585,3 +667,6 @@ class my_equals:
                     return False
 
         return True
+#  print(self.mymap[x][y]["covered"] and self.mymap[x][y]["state"])
+        # if (self.mymap[x][y]["covered"] and self.mymap[x][y]["state"]):
+        #     print("!"*100)

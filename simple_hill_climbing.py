@@ -34,15 +34,4 @@ def simple_hill_climbing(start_state):
 
     return [], 0, len(visited_array),
 
-
-initial_state = sta. map_state(6)
-initial_state.parent = "root"
-initial_state.printer(1, 1, "red", "🔴", True, False)
-initial_state.printer(1, 4, "red", "🟥", False, False)
-initial_state.printer(3, 4, "red", "🔴", True, False)
-initial_state.printer(3, 1, "red", "🟥", False, False)
-initial_state.print_map()
-path, path_len, visited_len = simple_hill_climbing(initial_state)
-print(path)
-print(path_len)
-print(visited_len)
+ 

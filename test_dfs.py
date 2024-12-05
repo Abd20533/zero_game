@@ -5,7 +5,7 @@ import numpy as np
 import queue as queue
 
 
-def dfs(state, visited=None, max_depth=100, path=None):
+def dfs(state, visited=None, max_depth=1000, path=None):
     if visited is None:
         visited = set()
     if path is None:
@@ -44,47 +44,42 @@ def dfs(state, visited=None, max_depth=100, path=None):
     return False, path, []
 
 
-initial_state = maf. map_state(11)
+initial_state = maf. map_state(8, 16)
 initial_state.parent = "root"
-initial_state.printer(1, 1, "black", "⬛️", False, False)
-initial_state.printer(1, 6, "black", "⬛️", False, False)
-initial_state.printer(1, 5, "black", "⬛️", False, False)
-initial_state.printer(1, 7, "black", "⬛️", False, False)
-initial_state.printer(2, 5, "black", "⬛️", False, False)
-initial_state.printer(1, 8, "black", "⬛️", False, False)
-initial_state.printer(1, 9, "black", "⬛️", False, False)
+initial_state. row_printer_black(1, 1, 5)
+initial_state. row_printer_black(1, 8, 11)
+initial_state. row_printer_black(1, 12, 14)
+
 initial_state.printer(2, 6, "black", "⬛️", False, False)
-initial_state.printer(2, 9, "black", "⬛️", False, False)
-initial_state.printer(3, 9, "black", "⬛️", False, False)
-initial_state.printer(5, 9, "black", "⬛️", False, False)
-initial_state.printer(6, 1, "black", "⬛️", False, False)
-initial_state.printer(6, 4, "black", "⬛️", False, False)
-initial_state.printer(6, 5, "black", "⬛️", False, False)
-initial_state.printer(6, 6, "black", "⬛️", False, False)
-initial_state.printer(6, 7, "black", "⬛️", False, False)
-initial_state.printer(6, 8, "black", "⬛️", False, False)
-initial_state.printer(6, 9, "black", "⬛️", False, False)
-initial_state.printer(7, 1, "black", "⬛️", False, False)
-initial_state.printer(7, 2, "black", "⬛️", False, False)
-initial_state.printer(7, 3, "black", "⬛️", False, False)
-initial_state.printer(7, 4, "black", "⬛️", False, False)
-initial_state.printer(4, 4, "black", "⬛️", False, False)
-initial_state.printer(4, 6, "black", "⬛️", False, False)
-initial_state.printer(4, 5, "black", "⬛️", False, False)
+initial_state.printer(3, 12, "black", "⬛️", False, False)
 
-# initial_state.printer(4, 9, "red", "🔴", True, False)
-# initial_state.printer(1, 2, "red", "🟥", False, False)
-# initial_state.printer(2, 7, "blue", "🔵", True, False)
-# initial_state.printer(6, 2, "blue", "🟦", False, False)
-# initial_state.printer(4, 2, "red", "🟥", False, False)
-# initial_state.printer(1, 4, "red", "🔴", True, False)
+initial_state. row_printer_black(4, 1, 5)
+initial_state. row_printer_black(4, 6, 8)
+initial_state. row_printer_black(4, 9, 15)
+initial_state. row_printer_black(5, 1, 8)
+initial_state. row_printer_black(5, 9, 15)
+initial_state. row_printer_black(6, 1, 15)
 
-initial_state.printer(4, 9, "red", "🔴", True, False)
 
-initial_state.printer(1, 2, "red", "🟥", False, False)
-initial_state.printer(2, 7, "blue", "🔵", True, False)
-initial_state.printer(6, 2, "blue", "🟦", False, False)
+initial_state.printer(3, 1, "orange", "🟧", False, False)
+initial_state.printer(2, 2, "blue", "🟦", False, False)
+initial_state.printer(2, 1, "red", "🟥", False, False)
+initial_state.printer(2, 3, "green", "🟩", False, False)
+initial_state.printer(3, 2, "yelow", "🟨", False, False)
+
+
+initial_state.printer(4, 5, "white", "⚪️", True, False)
+initial_state.printer(1, 7, "yelow", "🟡", True, False)
+initial_state.printer(4, 8, "blue", "🔵", True, False)
+initial_state.printer(1, 11, "orange", "🟠", True, False)
+
+initial_state.printer(1, 14, "green", "🟢", True, False)
+initial_state.printer(5, 8, "black", "⚫️", True, False)
+
+
 initial_state.print_map()
+
+
 found, path, len_visited = dfs(initial_state)
 
 if found:

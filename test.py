@@ -1,5 +1,5 @@
 import heapq
-import state as maf
+import state as sta
 # import numpy as np
 
 
@@ -38,7 +38,7 @@ def UCS(initial_state):
                 move.parent1 = current
                 heapq.heappush(priority_queue, (move.cost, move))
 
-    return None, None, None
+    return None, None, None, None
 
 
 # class my_set:
@@ -67,46 +67,49 @@ def UCS(initial_state):
 # initial_state.print_map()
 
 
-initial_state = maf. map_state(11)
+initial_state = sta. map_state(6, 7)
 initial_state.parent = "root"
-initial_state.printer(1, 1, "black", "⬛️", False, False)
-initial_state.printer(1, 6, "black", "⬛️", False, False)
-initial_state.printer(1, 5, "black", "⬛️", False, False)
-initial_state.printer(1, 7, "black", "⬛️", False, False)
-initial_state.printer(2, 5, "black", "⬛️", False, False)
-initial_state.printer(1, 8, "black", "⬛️", False, False)
-initial_state.printer(1, 9, "black", "⬛️", False, False)
-initial_state.printer(2, 6, "black", "⬛️", False, False)
-initial_state.printer(2, 9, "black", "⬛️", False, False)
-initial_state.printer(3, 9, "black", "⬛️", False, False)
-initial_state.printer(5, 9, "black", "⬛️", False, False)
-initial_state.printer(6, 1, "black", "⬛️", False, False)
-initial_state.printer(6, 4, "black", "⬛️", False, False)
-initial_state.printer(6, 5, "black", "⬛️", False, False)
-initial_state.printer(6, 6, "black", "⬛️", False, False)
-initial_state.printer(6, 7, "black", "⬛️", False, False)
-initial_state.printer(6, 8, "black", "⬛️", False, False)
-initial_state.printer(6, 9, "black", "⬛️", False, False)
-initial_state.printer(7, 1, "black", "⬛️", False, False)
-initial_state.printer(7, 2, "black", "⬛️", False, False)
-initial_state.printer(7, 3, "black", "⬛️", False, False)
-initial_state.printer(7, 4, "black", "⬛️", False, False)
-initial_state.printer(4, 4, "black", "⬛️", False, False)
-initial_state.printer(4, 6, "black", "⬛️", False, False)
-initial_state.printer(4, 5, "black", "⬛️", False, False)
+initial_state.print_map()
 
-# initial_state.printer(4, 9, "red", "🔴", True, False)
-# initial_state.printer(1, 2, "red", "🟥", False, False)
+
+# initial_state.printer(1, 1, "black", "⬛️", False, False)
+# initial_state.printer(1, 6, "black", "⬛️", False, False)
+# initial_state.printer(1, 5, "black", "⬛️", False, False)
+# initial_state.printer(1, 7, "black", "⬛️", False, False)
+# initial_state.printer(2, 5, "black", "⬛️", False, False)
+# initial_state.printer(1, 8, "black", "⬛️", False, False)
+# initial_state.printer(1, 9, "black", "⬛️", False, False)
+# initial_state.printer(2, 6, "black", "⬛️", False, False)
+# initial_state.printer(2, 9, "black", "⬛️", False, False)
+# initial_state.printer(3, 9, "black", "⬛️", False, False)
+# initial_state.printer(5, 9, "black", "⬛️", False, False)
+# initial_state.printer(6, 1, "black", "⬛️", False, False)
+# initial_state.printer(6, 4, "black", "⬛️", False, False)
+# initial_state.printer(6, 5, "black", "⬛️", False, False)
+# initial_state.printer(6, 6, "black", "⬛️", False, False)
+# initial_state.printer(6, 7, "black", "⬛️", False, False)
+# initial_state.printer(6, 8, "black", "⬛️", False, False)
+# initial_state.printer(6, 9, "black", "⬛️", False, False)
+# initial_state.printer(7, 1, "black", "⬛️", False, False)
+# initial_state.printer(7, 2, "black", "⬛️", False, False)
+# initial_state.printer(7, 3, "black", "⬛️", False, False)
+# initial_state.printer(7, 4, "black", "⬛️", False, False)
+# initial_state.printer(4, 4, "black", "⬛️", False, False)
+# initial_state.printer(4, 6, "black", "⬛️", False, False)
+# initial_state.printer(4, 5, "black", "⬛️", False, False)
+
+initial_state.printer(1, 1, "red", "🔴", True, False)
+initial_state.printer(4, 4, "red", "🟥", False, False)
 # initial_state.printer(2, 7, "blue", "🔵", True, False)
 # initial_state.printer(6, 2, "blue", "🟦", False, False)
 # initial_state.printer(4, 2, "red", "🟥", False, False)
 # initial_state.printer(1, 4, "red", "🔴", True, False)
 
-initial_state.printer(4, 9, "red", "🔴", True, False)
+# initial_state.printer(4, 9, "red", "🔴", True, False)
 
-initial_state.printer(1, 2, "red", "🟥", False, False)
-initial_state.printer(2, 7, "blue", "🔵", True, False)
-initial_state.printer(6, 2, "blue", "🟦", False, False)
+# initial_state.printer(1, 2, "red", "🟥", False, False)
+# initial_state.printer(2, 7, "blue", "🔵", True, False)
+# initial_state.printer(6, 2, "blue", "🟦", False, False)
 initial_state.print_map()
 solution_path, path, len_visited, cost = UCS(initial_state)
 print(path)
